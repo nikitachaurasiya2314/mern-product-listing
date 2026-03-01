@@ -18,6 +18,7 @@ const ProductListingPage = () => {
   const dispatch = useDispatch();
   const { products, pagination, loading, error, filters } = useSelector((s) => s.products);
   const [searchInput, setSearchInput] = useState(filters.search);
+  const [filterOpen, setFilterOpen] = useState(false);
   const isExternalReset = useRef(false);
 
   useEffect(() => {
@@ -41,9 +42,11 @@ const ProductListingPage = () => {
   useEffect(() => { loadProducts(); }, [loadProducts]);
 
   return (
-    <div className="max-w-7xl mx-auto px-5 py-6">
+    <div className="max-w-7xl mx-auto px-4 py-6">
+
+      {/* Search + Sort + Mobile Filter Button */}
       <div className="flex flex-wrap gap-3 mb-6">
-        <div className="flex-1 min-w-[220px] relative">
+        <div className="flex-1 min-w-[180px] relative">
           <input
             type="text"
             value={searchInput}
@@ -73,10 +76,19 @@ const ProductListingPage = () => {
             <option key={o.value} value={o.value}>{o.label}</option>
           ))}
         </select>
+
+        {/* Filter button — mobile only */}
+        <button
+          onClick={() => setFilterOpen(true)}
+          className="sm:hidden flex items-center gap-2 px-4 py-2.5 border border-gray-200 rounded-xl text-sm bg-white cursor-pointer hover:bg-gray-50"
+        >
+          ⚙️ Filters
+        </button>
       </div>
 
       <div className="flex gap-6 items-start">
-        <FilterSidebar />
+        <FilterSidebar mobileOpen={filterOpen} onClose={() => setFilterOpen(false)} />
+
         <main className="flex-1 min-w-0">
           {pagination && (
             <p className="text-gray-400 text-sm mb-4">
@@ -102,7 +114,7 @@ const ProductListingPage = () => {
               <p className="text-gray-400 text-sm">No products match your filters.</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-5">
               {products.map((product) => (
                 <ProductCard key={product._id} product={product} isAdmin={false} />
               ))}
