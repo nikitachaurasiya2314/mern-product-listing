@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 const StarRating = ({ rating }) => {
   const full  = Math.floor(rating);
@@ -14,6 +14,7 @@ const StarRating = ({ rating }) => {
 
 const ProductCard = ({ product, onEdit, onDelete, isAdmin }) => {
   const inStock = product.stock > 0;
+  const [confirmDelete, setConfirmDelete] = useState(false);
 
   return (
     <div className="bg-white rounded-xl overflow-hidden shadow hover:shadow-md transition-shadow duration-200">
@@ -53,18 +54,38 @@ const ProductCard = ({ product, onEdit, onDelete, isAdmin }) => {
 
           {isAdmin && (
             <div className="flex gap-2">
-              <button
-                onClick={() => onEdit(product)}
-                className="bg-blue-500 hover:bg-blue-600 text-white text-xs px-3 py-1 rounded cursor-pointer border-0 transition-colors"
-              >
-                Edit
-              </button>
-              <button
-                onClick={() => onDelete(product._id)}
-                className="bg-red-500 hover:bg-red-600 text-white text-xs px-3 py-1 rounded cursor-pointer border-0 transition-colors"
-              >
-                Delete
-              </button>
+              {confirmDelete ? (
+                <>
+                  <span className="text-xs text-gray-500 self-center">Sure?</span>
+                  <button
+                    onClick={() => { onDelete(product._id); setConfirmDelete(false); }}
+                    className="bg-red-500 hover:bg-red-600 text-white text-xs px-3 py-1 rounded cursor-pointer border-0 transition-colors"
+                  >
+                    Yes
+                  </button>
+                  <button
+                    onClick={() => setConfirmDelete(false)}
+                    className="bg-gray-200 hover:bg-gray-300 text-gray-700 text-xs px-3 py-1 rounded cursor-pointer border-0 transition-colors"
+                  >
+                    No
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    onClick={() => onEdit(product)}
+                    className="bg-blue-500 hover:bg-blue-600 text-white text-xs px-3 py-1 rounded cursor-pointer border-0 transition-colors"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => setConfirmDelete(true)}
+                    className="bg-red-500 hover:bg-red-600 text-white text-xs px-3 py-1 rounded cursor-pointer border-0 transition-colors"
+                  >
+                    Delete
+                  </button>
+                </>
+              )}
             </div>
           )}
         </div>

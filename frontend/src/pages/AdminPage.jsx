@@ -20,7 +20,6 @@ const AdminPage = () => {
   const handleClose = () => { setShowModal(false); setEditing(null); };
 
   const handleDelete = async (id) => {
-    if (!window.confirm('Delete this product?')) return;
     try {
       await dispatch(deleteProduct(id)).unwrap();
       toast.success('Product deleted!');
